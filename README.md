@@ -32,7 +32,7 @@ https://github.com/user-attachments/assets/7dc8d161-bd0c-4740-bf2b-28431140f7da
 
 ## Maze Layout
 
-The maze layout is a 20x20 grid with an invisible border, making it effectively a 22x22 grid. The edges are treated as solid walls to prevent players from moving out of bounds.
+The maze layout is a 20x20 grid with an invisible border.
 
 ### Example Layout
 ```python
