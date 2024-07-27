@@ -2,6 +2,12 @@
 
 A Pygame-based maze game where two players navigate a 20x20 maze with an invisible border to prevent them from moving out of bounds. The players use A* pathfinding algorithms to find the shortest path to the goal.
 
+## Gameplay
+
+https://github.com/user-attachments/assets/7dc8d161-bd0c-4740-bf2b-28431140f7da
+
+
+
 ## Features
 
 - Two players with different colors and exploration trails.
