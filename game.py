@@ -3,13 +3,14 @@ import random
 import sys
 import heapq
 
+from maze_defines import *
+
 # Initialize Pygame
 pygame.init()
 
 # Define constants
 SCREEN_WIDTH, SCREEN_HEIGHT = 500, 500
-TILE_SIZE = SCREEN_WIDTH // 20  # Adjust for 20x20 maze
-EMPTY, WALL, START, END = ' ', '#', 'S', 'E'
+TILE_SIZE = SCREEN_WIDTH // MAP_SIZE  # Adjust for 20x20 maze
 WHITE, BLACK, GREEN, RED, BLUE, LIGHT_RED, LIGHT_BLUE, PURPLE, LIGHT_PURPLE = (255, 255, 255), (0, 0, 0), (0, 255, 0), (255, 0, 0), (0, 0, 255), (255, 200, 200), (200, 200, 255), (128, 0, 128), (200, 128, 200)
 
 # Define a new navigable maze layout with a central goal
@@ -70,15 +71,15 @@ class Player:
         self.color = color
         self.explore_color = explore_color
         self.decide_action = decide_action
-        self.known_map = [['?' for _ in range(20)] for _ in range(20)]  # Update to 20x20
+        self.known_map = [['?' for _ in range(MAP_SIZE)] for _ in range(MAP_SIZE)]  # Update to 20x20
         self.previous_positions = []
         self.explored_tiles = set()
 
     def update_known_map(self, maze):
         x, y = self.position
-        for i in range(max(0, x-1), min(20, x+2)):  # Update range for 20x20
-            for j in range(max(0, y-1), min(20, y+2)):  # Update range for 20x20
-                if 0 <= i < 20 and 0 <= j < 20:  # Ensure indices are within bounds
+        for i in range(max(0, x-1), min(MAP_SIZE, x+2)):  # Update range for 20x20
+            for j in range(max(0, y-1), min(MAP_SIZE, y+2)):  # Update range for 20x20
+                if 0 <= i < MAP_SIZE and 0 <= j < MAP_SIZE:  # Ensure indices are within bounds
                     self.known_map[i][j] = maze[i][j]
                     if maze[i][j] != WALL:
                         self.explored_tiles.add((i, j))
@@ -94,11 +95,11 @@ class Game:
         x, y = player.position
         if direction == 'up' and x > 0 and self.maze.layout[x-1][y] != WALL:
             player.position = (x-1, y)
-        elif direction == 'down' and x < 19 and self.maze.layout[x+1][y] != WALL:  # Update for 20x20
+        elif direction == 'down' and x < MAP_SIZE-1 and self.maze.layout[x+1][y] != WALL:  # Update for 20x20
             player.position = (x+1, y)
         elif direction == 'left' and y > 0 and self.maze.layout[x][y-1] != WALL:
             player.position = (x, y-1)
-        elif direction == 'right' and y < 19 and self.maze.layout[x][y+1] != WALL:  # Update for 20x20
+        elif direction == 'right' and y < MAP_SIZE-1 and self.maze.layout[x][y+1] != WALL:  # Update for 20x20
             player.position = (x, y+1)
 
     def check_winner(self):
@@ -163,7 +164,7 @@ def a_star_algorithm(start, goal, known_map):
                 ny -= 1
             elif move == 'right':
                 ny += 1
-            if 0 <= nx < 20 and 0 <= ny < 20 and known_map[nx][ny] != WALL:
+            if 0 <= nx < MAP_SIZE and 0 <= ny < MAP_SIZE and known_map[nx][ny] != WALL:
                 neighbors.append((nx, ny, move))
         return neighbors
 
@@ -194,7 +195,7 @@ def a_star_algorithm(start, goal, known_map):
     return []  # Return an empty path if no path found
 
 def player1_algorithm(current_pos, previous_positions, known_map):
-    goal_pos = (5, 5)  # Position of the END tile
+    goal_pos = GOAL_POSITION  # Position of the END tile
     path = a_star_algorithm(current_pos, goal_pos, known_map)
     if path:
         next_move = path[0]
@@ -212,15 +213,7 @@ def player2_algorithm(current_pos, previous_positions, known_map):
     goal_pos = (5, 5)  # Position of the END tile
     path = a_star_algorithm(current_pos, goal_pos, known_map)
     if path:
-        next_move = path[0]
-        if next_move == 'up':
-            return 'up'
-        elif next_move == 'down':
-            return 'down'
-        elif next_move == 'left':
-            return 'left'
-        elif next_move == 'right':
-            return 'right'
+        return path[0]
     return random.choice(['up', 'down', 'left', 'right'])
 
 

@@ -1,0 +1,3 @@
+EMPTY, WALL, START, END = ' ', '#', 'S', 'E'
+MAP_SIZE = 20
+GOAL_POSITION = (9, 9)
